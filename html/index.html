@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+        .main{
+            width: 60%;
+            margin: 50px auto;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/angular.js/1.4.6/angular.min.js"></script>
+</head>
+<body>
+    <div class="main" data-ng-app="MyUser" data-ng-controller="myCtrl">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>编辑</th>
+                    <th>名</th>
+                    <th>姓</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            <!-- ng-repeat 循环 x次数、list数组集合-->
+                <tr data-ng-repeat="x in list">
+                    <td>
+                        <button class="btn" data-ng-click="updata($index)">
+                            <span  class="glyphicon glyphicon-pencil"></span>编辑
+                        </button>
+                    </td>
+                    <!-- {{读取并显示、可进行运算}} -->
+                    <td>{{x.mz}}</td>
+                    <td>{{x.xi}}</td>
+                    <td>
+                        <button class="btn" data-ng-click="remove($index)">
+                            删除
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-success" ng-click="add()" ng-model="Usera">
+            <span class="glyphicon glyphicon-user"></span>创建新用户
+        </button>
+        <hr>
+        <!--ng-hide  显示 -->
+        <h3 ng-show="Usera">创建新用户:</h3>
+        <h3 ng-hide="Usera">编辑用户:</h3>
+        <!--ng-disabled="!Usera"   等同于 ng-disabled="expression"-->
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">名:</label>
+                <div class="col-sm-10">
+                    <input type="text" id="inpL" data-ng-model="mz" data-ng-value="Myval1" data-ng-disabled="!Usera" placeholder="名">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">姓:</label>
+                <div class="col-sm-10">
+                    <input type="text" id="inpF" data-ng-model="xi" data-ng-value="Myval2" data-ng-disabled="!Usera" placeholder="姓">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">密码:</label>
+                <div class="col-sm-10">
+                    <input type="password"  placeholder="密码">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">重复密码:</label>
+                <div class="col-sm-10">
+                    <input type="password" placeholder="重复密码">
+                </div>
+            </div>
+        </form>
+        <button class="btn btn-success">修改</button>
+        <button class="btn btn-success" data-ng-click="addTbody()">添加</button>
+    </div>
+    <script>
+        var app = angular.module('MyUser',[]);
+        app.controller('myCtrl',function ($scope) {
+           //数据集合
+            $scope.list = [
+                {mz:'三',xi:'张'},
+                {mz:'二',xi:'刘'},
+                {mz:'一',xi:'李'},
+                {mz:'五',xi:'王'}
+            ];
+            //删除数据
+            $scope.remove = function (index) {/*删除用户*/
+                $scope.list.splice(index,1);
+            }
+            var lname = "";
+            var fname = "";
+            //设置默认显示创建用户
+            $scope.Usera = true;/*true 不显示  false显示*/
+            $scope.updata = function (index) {/*修改数据*/
+                //获取我点击的数据，并传入input框
+                $scope.Myval1 = ($scope.list[index]).mz;
+//                console.log($scope.Myval1);
+                $scope.Myval2 = ($scope.list[index]).xi;
+//                console.log($scope.Myval2);
+                $scope.Usera = false;/*false 显示*/
+                $scope.expression = true;/*不可修改*/
+            }
+            $scope.add = function () {/*新建用户*/
+                $scope.Usera = true;/*true 不显示*/
+                //$scope.expression = false;/*可修改*/
+                $scope.mz = " ";
+                $scope.xi = " ";
+            }
+            var inpL = document.getElementById("inpL");
+            var inpF = document.getElementById("inpF");
+            $scope.addTbody = function () {/*添加用户用户名*/
+                if (inpL.value == "" || inpF.value == ""){
+                    alert("请输入你要添加的数据！");
+                }else {
+                    /**
+                     * 获取input框的值
+                     * 得到值后，添加到list集合中，
+                     * 每次添加，input进行清空
+                     **/
+                    lname = inpL.value;
+                    fname = inpF.value;
+                    $scope.list.push({mz:lname,xi:fname});
+                    inpL.value = "";
+                    inpF.value = "";
+//                    var len = ($scope.list).length;
+//                    for (var  i = 0 ; i < len ; i++){
+//                        console.log($scope.list[i].mz)
+//                    }
+                }
+            }
+        })
+    </script>
+</body>
+</html>
